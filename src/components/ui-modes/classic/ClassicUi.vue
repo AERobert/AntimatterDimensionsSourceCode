@@ -64,12 +64,12 @@ export default {
         role="marquee"
         aria-label="Game news ticker"
       />
-      <header role="banner">
+      <header>
+        <h1 class="visually-hidden">Antimatter Dimensions</h1>
         <GameHeader class="l-old-ui__header" />
       </header>
       <nav
         id="main-navigation"
-        role="navigation"
         aria-label="Main navigation"
       >
         <ClassicTabBar />
@@ -87,5 +87,15 @@ export default {
 </template>
 
 <style scoped>
-
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 </style>

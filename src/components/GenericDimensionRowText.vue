@@ -58,38 +58,32 @@ export default {
 <template>
   <div
     class="l-dimension-text-container"
-    role="region"
-    :aria-label="`${name} statistics`"
   >
     <div :class="adjustableTextClass()">
       <span
         :id="`dim-name-${tier}`"
-        class="c-dim-row__large"
+        class="c-dim-row__large c-dim-row__name"
       >
         {{ name }}
       </span>
-      <span
-        class="c-dim-row__small"
-        :aria-label="`Multiplier: ${multiplierText}`"
-      >
+      <span class="c-dim-row__small">
         {{ multiplierText }}
       </span>
     </div>
     <div :class="adjustableTextClass()">
-      <span
-        class="c-dim-row__large"
-        :aria-label="`Amount: ${amountText}`"
-      >
+      <span class="c-dim-row__large">
         {{ amountText }}
       </span>
       <span
         v-if="rate.neq(0) && showPercentage"
         class="c-dim-row__small"
-        :aria-label="`Growth rate: ${rateText}`"
       >
         {{ rateText }}
       </span>
     </div>
+    <span class="visually-hidden">
+      {{ name }}: {{ amountText }}, multiplier {{ multiplierText }}{{ rate.neq(0) && showPercentage ? `, growth ${rateText}` : '' }}
+    </span>
   </div>
 </template>
 
@@ -127,5 +121,21 @@ export default {
 .c-dim-row__small {
   font-size: 1.2rem;
   margin-right: 1rem;
+}
+
+.c-dim-row__name {
+  font-weight: bold;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>

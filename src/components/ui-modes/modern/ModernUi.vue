@@ -74,20 +74,21 @@ export default {
         v-if="!bigCrunch"
         class="tab-container"
       >
-        <header role="banner">
+        <header>
+          <h1 class="visually-hidden">Antimatter Dimensions</h1>
           <HeaderPrestigeGroup />
         </header>
-        <div
+        <section
           class="information-header"
-          role="region"
-          aria-label="Game status information"
+          aria-labelledby="status-heading"
         >
+          <h2 id="status-heading" class="visually-hidden">Game Status</h2>
           <HeaderChallengeDisplay />
           <HeaderChallengeEffects />
           <GameSpeedDisplay v-if="hasReality" />
           <br v-if="hasReality">
           <HeaderBlackHole />
-        </div>
+        </section>
         <slot />
       </div>
     </div>
@@ -95,5 +96,15 @@ export default {
 </template>
 
 <style scoped>
-
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 </style>

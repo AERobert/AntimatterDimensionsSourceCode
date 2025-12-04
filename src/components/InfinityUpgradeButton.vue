@@ -14,6 +14,16 @@ export default {
     upgrade: {
       type: Object,
       required: true
+    },
+    columnPosition: {
+      type: Number,
+      required: false,
+      default: 0
+    },
+    rowPosition: {
+      type: Number,
+      required: false,
+      default: 0
     }
   },
   data() {
@@ -64,6 +74,28 @@ export default {
     },
     isImprovedByTS31() {
       return this.hasTS31 && this.isBasedOnInfinities && !this.showChargedEffect;
+    },
+    accessibilityLabel() {
+      const name = this.config.description ?
+        (typeof this.config.description === "function" ? this.config.description() : this.config.description) :
+        "Upgrade";
+      let status = "";
+      if (this.isUseless) {
+        status = "disabled in Doomed reality";
+      } else if (this.isCharged) {
+        status = "purchased and charged";
+      } else if (this.isBought) {
+        status = "purchased";
+      } else if (this.canBeBought) {
+        status = "available for purchase";
+      } else {
+        status = "locked, purchase upgrades above first";
+      }
+      let position = "";
+      if (this.columnPosition > 0 || this.rowPosition > 0) {
+        position = `, column ${this.columnPosition + 1} row ${this.rowPosition + 1}`;
+      }
+      return `${name}${position}. Status: ${status}`;
     }
   },
   methods: {
@@ -104,6 +136,9 @@ export default {
 <template>
   <button
     :class="classObject"
+    :aria-label="accessibilityLabel"
+    :aria-pressed="isBought"
+    tabindex="0"
     @mouseenter="showingCharged = canBeCharged"
     @mouseleave="showingCharged = false"
     @click="upgrade.purchase()"
@@ -132,10 +167,22 @@ export default {
       :config="config"
       name="Infinity Point"
     />
+    <span class="visually-hidden" v-if="isBought"> (Purchased)</span>
+    <span class="visually-hidden" v-else-if="!canBeBought"> (Locked)</span>
     <slot />
   </button>
 </template>
 
 <style scoped>
-
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 </style>

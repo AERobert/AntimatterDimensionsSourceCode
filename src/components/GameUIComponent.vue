@@ -52,19 +52,13 @@ export default {
     id="ui-container"
     :class="containerClass"
     class="ui-wrapper"
-    role="application"
-    aria-label="Antimatter Dimensions"
   >
     <div
       id="ui"
       class="c-game-ui"
     >
       <component :is="uiLayout">
-        <main
-          id="main-content"
-          role="main"
-          aria-label="Game content"
-        >
+        <main id="main-content">
           <component
             :is="page"
             class="c-game-tab"

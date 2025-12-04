@@ -119,67 +119,119 @@ export default {
 
 <template>
   <div class="l-infinity-upgrades-tab">
-    <div
+    <h2 class="c-subtab-title">Infinity Upgrades</h2>
+
+    <section
       v-if="chargeUnlocked"
       class="c-subtab-option-container"
+      aria-labelledby="charge-section"
     >
+      <h3 id="charge-section" class="visually-hidden">Charged Upgrades</h3>
       <PrimaryButton
         :class="disChargeClassObject"
+        :aria-pressed="disCharge"
+        aria-label="Respec Charged Infinity Upgrades on next Reality"
         @click="disCharge = !disCharge"
       >
         Respec Charged Infinity Upgrades on next Reality
       </PrimaryButton>
-    </div>
-    <div v-if="chargeUnlocked">
-      You have charged {{ formatInt(chargesUsed) }}/{{ formatInt(totalCharges) }} Infinity Upgrades.
-      Charged Infinity Upgrades have their effect altered.
-      <br>
-      Hold shift to show Charged Infinity Upgrades. You can freely respec your choices on Reality.
-    </div>
-    <div v-if="isUseless">
+      <p aria-live="polite">
+        You have charged {{ formatInt(chargesUsed) }}/{{ formatInt(totalCharges) }} Infinity Upgrades.
+        Charged Infinity Upgrades have their effect altered.
+        <br>
+        Hold shift to show Charged Infinity Upgrades. You can freely respec your choices on Reality.
+      </p>
+    </section>
+
+    <p v-if="isUseless" role="alert">
       You cannot Charge Infinity Upgrades while Doomed.
-    </div>
-    <br>
-    Within each column, the upgrades must be purchased from top to bottom.
-    <br>
-    <div class="l-infinity-upgrade-grid l-infinity-upgrades-tab__grid">
+    </p>
+
+    <p class="c-upgrade-instructions">
+      Within each column, the upgrades must be purchased from top to bottom.
+    </p>
+
+    <section aria-labelledby="main-upgrades">
+      <h3 id="main-upgrades" class="visually-hidden">Main Infinity Upgrades Grid</h3>
       <div
-        v-for="(column, columnId) in grid"
-        :key="columnId"
-        class="c-infinity-upgrade-grid__column"
+        class="l-infinity-upgrade-grid l-infinity-upgrades-tab__grid"
+        role="grid"
+        aria-label="Infinity Upgrades grid, 4 columns, upgrades must be bought top to bottom"
       >
-        <InfinityUpgradeButton
-          v-for="upgrade in column"
-          :key="upgrade.id"
-          :upgrade="upgrade"
-          :class="btnClassObject(columnId)"
-        />
         <div
-          class="c-infinity-upgrade-grid__column--background"
-          :style="styleOfColumnBg[columnId]"
-        />
+          v-for="(column, columnId) in grid"
+          :key="columnId"
+          class="c-infinity-upgrade-grid__column"
+          role="row"
+          :aria-label="`Column ${columnId + 1}`"
+        >
+          <InfinityUpgradeButton
+            v-for="(upgrade, rowId) in column"
+            :key="upgrade.id"
+            :upgrade="upgrade"
+            :column-position="columnId"
+            :row-position="rowId"
+            :class="btnClassObject(columnId)"
+            role="gridcell"
+          />
+          <div
+            class="c-infinity-upgrade-grid__column--background"
+            :style="styleOfColumnBg[columnId]"
+            aria-hidden="true"
+          />
+        </div>
       </div>
-    </div>
-    <div
+    </section>
+
+    <section
       v-if="bottomRowUnlocked"
       class="l-infinity-upgrades-bottom-row"
+      aria-labelledby="bonus-upgrades"
     >
+      <h3 id="bonus-upgrades" class="visually-hidden">Bonus Upgrades</h3>
       <IpMultiplierButton class="l-infinity-upgrades-tab__mult-btn" />
       <InfinityUpgradeButton
         :upgrade="offlineIpUpgrade"
         :class="btnClassObject(1)"
       />
-    </div>
-    <div v-if="eternityUnlocked && bottomRowUnlocked">
+    </section>
+
+    <p v-if="eternityUnlocked && bottomRowUnlocked" class="c-upgrade-note">
       The Infinity Point multiplier becomes more expensive
       <br>
       above {{ formatPostBreak(ipMultSoftCap) }} Infinity Points, and cannot be purchased past
       {{ formatPostBreak(ipMultHardCap) }} Infinity Points.
-    </div>
+    </p>
   </div>
 </template>
 
 <style scoped>
+.c-subtab-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.c-upgrade-instructions {
+  margin: 0.5rem 0;
+  font-style: italic;
+}
+
+.c-upgrade-note {
+  margin-top: 1rem;
+}
+
 .c-infinity-upgrade-grid__column {
   display: flex;
   overflow: hidden;
