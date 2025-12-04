@@ -26,9 +26,11 @@ export default {
 </script>
 
 <template>
-  <div
+  <nav
     v-if="isVisible"
     class="c-subtab-button-container"
+    role="tablist"
+    :aria-label="`${tab.name} subtabs`"
   >
     <ClassicSubtabButton
       v-for="(subtab, i) in subtabs"
@@ -36,7 +38,7 @@ export default {
       :subtab="subtab"
       :parent-name="tab.name"
     />
-  </div>
+  </nav>
 </template>
 
 <style scoped>

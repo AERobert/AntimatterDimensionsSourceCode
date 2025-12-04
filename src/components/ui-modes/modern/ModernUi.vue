@@ -66,14 +66,22 @@ export default {
     >
       <NewsTicker
         v-if="news"
+        role="marquee"
+        aria-label="Game news ticker"
       />
       <BigCrunchButton />
       <div
         v-if="!bigCrunch"
         class="tab-container"
       >
-        <HeaderPrestigeGroup />
-        <div class="information-header">
+        <header role="banner">
+          <HeaderPrestigeGroup />
+        </header>
+        <div
+          class="information-header"
+          role="region"
+          aria-label="Game status information"
+        >
           <HeaderChallengeDisplay />
           <HeaderChallengeEffects />
           <GameSpeedDisplay v-if="hasReality" />

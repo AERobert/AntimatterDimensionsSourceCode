@@ -201,7 +201,17 @@ export default {
     disabledDotStyle: [Array, Object, Function],
     labelStyle: Object,
     labelActiveStyle: Object,
-    dotClass: [String, Array]
+    dotClass: [String, Array],
+    ariaLabel: {
+      type: String,
+      required: false,
+      default: "Slider"
+    },
+    ariaLabelledby: {
+      type: String,
+      required: false,
+      default: ""
+    }
   },
   data() {
     return {
@@ -509,6 +519,21 @@ export default {
       }
       return arr
     },
+    ariaValueText() {
+      if (this.isRange) {
+        const val0 = this.xformatter ? this.formatting(this.val[0]) : this.val[0];
+        const val1 = this.xformatter ? this.formatting(this.val[1]) : this.val[1];
+        return `${val0} to ${val1}`;
+      }
+      return this.xformatter ? this.formatting(this.val) : String(this.val);
+    },
+    sliderAriaLabel() {
+      if (this.ariaLabelledby) return undefined;
+      return this.ariaLabel;
+    },
+    sliderId() {
+      return `slider-${this._uid}`;
+    }
   },
   watch: {
     value(val) {
@@ -1054,8 +1079,19 @@ export default {
             }
           ]"
             :style="dotStyles"
+            role="slider"
+            :tabindex="disabledArray[0] ? -1 : 0"
+            :aria-valuemin="minimum"
+            :aria-valuemax="val[1]"
+            :aria-valuenow="val[0]"
+            :aria-valuetext="xformatter ? formatting(val[0]) : String(val[0])"
+            :aria-label="`${sliderAriaLabel} minimum`"
+            :aria-disabled="disabledArray[0]"
+            :aria-orientation="direction"
             @mousedown="moveStart"
             @touchstart="moveStart"
+            @focus="focusFlag = true; focusSlider = 0"
+            @blur="focusFlag = false"
           >
             <div
               :class="['l-ad-slider__dot-handle', 'c-ad-slider__dot-handle', dotClass]"
@@ -1067,7 +1103,7 @@ export default {
               focusFlag && focusSlider === 0 ? focusStyles[0]: null
             ]"
             ></div>
-            <div ref="tooltip0" :class="['ad-slider-tooltip-' + tooltipDirection[0], 'ad-slider-tooltip-wrap']">
+            <div ref="tooltip0" :class="['ad-slider-tooltip-' + tooltipDirection[0], 'ad-slider-tooltip-wrap']" role="tooltip" aria-hidden="true">
               <span class="ad-slider-tooltip" :style="tooltipStyles[0]">{{ xformatter ? formatting(val[0]) : val[0] }}</span>
             </div>
           </div>
@@ -1082,8 +1118,19 @@ export default {
             }
           ]"
             :style="dotStyles"
+            role="slider"
+            :tabindex="disabledArray[1] ? -1 : 0"
+            :aria-valuemin="val[0]"
+            :aria-valuemax="maximum"
+            :aria-valuenow="val[1]"
+            :aria-valuetext="xformatter ? formatting(val[1]) : String(val[1])"
+            :aria-label="`${sliderAriaLabel} maximum`"
+            :aria-disabled="disabledArray[1]"
+            :aria-orientation="direction"
             @mousedown="moveStart($event, 1)"
             @touchstart="moveStart($event, 1)"
+            @focus="focusFlag = true; focusSlider = 1"
+            @blur="focusFlag = false"
           >
             <div
               :class="['l-ad-slider__dot-handle', 'c-ad-slider__dot-handle', dotClass]"
@@ -1095,7 +1142,7 @@ export default {
               focusFlag && focusSlider === 1 ? focusStyles[1]: null
             ]"
             ></div>
-            <div ref="tooltip1" :class="['ad-slider-tooltip-' + tooltipDirection[1], 'ad-slider-tooltip-wrap']">
+            <div ref="tooltip1" :class="['ad-slider-tooltip-' + tooltipDirection[1], 'ad-slider-tooltip-wrap']" role="tooltip" aria-hidden="true">
               <span class="ad-slider-tooltip" :style="tooltipStyles[1]">{{ xformatter ? formatting(val[1]) : val[1] }}</span>
             </div>
           </div>
@@ -1111,14 +1158,26 @@ export default {
             }
           ]"
             :style="dotStyles"
+            role="slider"
+            :tabindex="boolDisabled ? -1 : 0"
+            :aria-valuemin="minimum"
+            :aria-valuemax="maximum"
+            :aria-valuenow="val"
+            :aria-valuetext="ariaValueText"
+            :aria-label="sliderAriaLabel"
+            :aria-labelledby="ariaLabelledby || undefined"
+            :aria-disabled="boolDisabled"
+            :aria-orientation="direction"
             @mousedown="moveStart"
             @touchstart="moveStart"
+            @focus="focusFlag = true; focusSlider = 0"
+            @blur="focusFlag = false"
           >
             <div :class="['l-ad-slider__dot-handle', 'c-ad-slider__dot-handle', dotClass]"
                  :style="[sliderStyles, focusFlag && focusSlider === 0 ? focusStyles : null]">
               {{dotContents(0)}}
             </div>
-            <div :class="['ad-slider-tooltip-' + tooltipDirection, 'ad-slider-tooltip-wrap']">
+            <div :class="['ad-slider-tooltip-' + tooltipDirection, 'ad-slider-tooltip-wrap']" role="tooltip" aria-hidden="true">
               <span class="ad-slider-tooltip" :style="tooltipStyles">{{ xformatter ? formatting(val) : val }}</span>
             </div>
           </div>

@@ -360,8 +360,71 @@ body {
   display: none;
 }
 
-button:focus {
+/* Accessibility: Skip link styles */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000000;
+  color: #ffffff;
+  padding: 8px 16px;
+  z-index: 10000;
+  text-decoration: none;
+  font-weight: bold;
+  border: 2px solid #ffffff;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Accessibility: Remove default outline only when not using keyboard navigation */
+button:focus:not(:focus-visible) {
   outline: none;
+}
+
+/* Accessibility: Visible focus styles for keyboard navigation */
+button:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+[role="slider"]:focus-visible,
+[tabindex="0"]:focus-visible {
+  outline: 2px solid var(--color-accent, #00bcd4);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.3);
+}
+
+/* High contrast focus for specific themes */
+.s-base--dark button:focus-visible,
+.s-base--dark [role="button"]:focus-visible,
+.s-base--dark [role="tab"]:focus-visible {
+  outline-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3);
+}
+
+/* Focus styles for modal elements */
+[role="dialog"]:focus,
+[role="alertdialog"]:focus {
+  outline: none;
+}
+
+/* Tab button focus styles */
+.o-tab-btn:focus-visible {
+  outline: 2px solid var(--color-accent, #00bcd4);
+  outline-offset: -2px;
+}
+
+/* Slider focus styles */
+.l-ad-slider__dot:focus-visible {
+  outline: 2px solid var(--color-accent, #00bcd4);
+  outline-offset: 2px;
+}
+
+/* Glyph component focus styles */
+.l-glyph-component:focus-visible {
+  outline: 2px solid var(--color-reality-light, #00bcd4);
+  outline-offset: 2px;
 }
 
 /* #region CustomizeableTooltip */

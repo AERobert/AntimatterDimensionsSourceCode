@@ -62,20 +62,31 @@ export default {
   <div
     v-if="!isHidden && isAvailable"
     :class="[classObject, tab.config.UIClass]"
+    role="tablist"
+    :aria-label="`${tabName} navigation`"
   >
     <div
       class="l-tab-btn-inner"
+      role="tab"
+      tabindex="0"
+      :aria-selected="isCurrentTab"
+      :aria-label="`${tabName} tab${hasNotification ? ', has notification' : ''}`"
       @click="tab.show(true)"
+      @keydown.enter="tab.show(true)"
+      @keydown.space.prevent="tab.show(true)"
     >
       {{ tabName }}
       <div
         v-if="hasNotification"
         class="fas fa-circle-exclamation l-notification-icon"
+        aria-hidden="true"
       />
     </div>
     <div
       v-if="showSubtabs"
       class="subtabs"
+      role="tablist"
+      :aria-label="`${tabName} subtabs`"
     >
       <template
         v-for="(subtab, index) in tab.subtabs"
@@ -88,14 +99,27 @@ export default {
             [tab.config.UIClass,
              {'o-subtab-btn--active': isCurrentSubtab(subtab.id)}]
           "
+          role="tab"
+          :tabindex="isCurrentSubtab(subtab.id) ? 0 : -1"
+          :aria-selected="isCurrentSubtab(subtab.id)"
+          :aria-label="`${subtab.name} subtab${subtab.hasNotification ? ', has notification' : ''}`"
           @click="subtab.show(true)"
+          @keydown.enter="subtab.show(true)"
+          @keydown.space.prevent="subtab.show(true)"
         >
-          <span v-html="subtab.symbol" />
+          <span
+            aria-hidden="true"
+            v-html="subtab.symbol"
+          />
           <div
             v-if="subtab.hasNotification"
             class="fas fa-circle-exclamation l-notification-icon"
+            aria-hidden="true"
           />
-          <div class="o-subtab__tooltip">
+          <div
+            class="o-subtab__tooltip"
+            role="tooltip"
+          >
             {{ subtab.name }}
           </div>
         </div>

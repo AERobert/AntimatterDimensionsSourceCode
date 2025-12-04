@@ -49,12 +49,21 @@ export default {
        { 'o-tab-btn--active': isCurrentTab }]
     "
     class="o-tab-btn"
+    role="tab"
+    :aria-selected="isCurrentTab"
+    :aria-label="`${tabName} tab${hasNotification ? ', has notification' : ''}`"
+    :tabindex="isCurrentTab ? 0 : -1"
     @click="tab.show(true)"
+    @keydown.left="$emit('navigate', -1)"
+    @keydown.right="$emit('navigate', 1)"
+    @keydown.home="$emit('navigate', 'first')"
+    @keydown.end="$emit('navigate', 'last')"
   >
     {{ tabName }}
     <div
       v-if="hasNotification"
       class="fas fa-circle-exclamation l-notification-icon"
+      aria-hidden="true"
     />
   </button>
 </template>

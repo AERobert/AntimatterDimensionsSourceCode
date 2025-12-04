@@ -56,22 +56,36 @@ export default {
 </script>
 
 <template>
-  <div class="l-dimension-text-container">
+  <div
+    class="l-dimension-text-container"
+    role="region"
+    :aria-label="`${name} statistics`"
+  >
     <div :class="adjustableTextClass()">
-      <span class="c-dim-row__large">
+      <span
+        :id="`dim-name-${tier}`"
+        class="c-dim-row__large"
+      >
         {{ name }}
       </span>
-      <span class="c-dim-row__small">
+      <span
+        class="c-dim-row__small"
+        :aria-label="`Multiplier: ${multiplierText}`"
+      >
         {{ multiplierText }}
       </span>
     </div>
     <div :class="adjustableTextClass()">
-      <span class="c-dim-row__large">
+      <span
+        class="c-dim-row__large"
+        :aria-label="`Amount: ${amountText}`"
+      >
         {{ amountText }}
       </span>
       <span
         v-if="rate.neq(0) && showPercentage"
         class="c-dim-row__small"
+        :aria-label="`Growth rate: ${rateText}`"
       >
         {{ rateText }}
       </span>

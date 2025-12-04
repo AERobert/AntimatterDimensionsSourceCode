@@ -35,20 +35,41 @@ export default {
   computed: {
     displayText() {
       return `${this.label} ${this.value ? this.on : this.off}`.trim();
+    },
+    ariaLabel() {
+      return `${this.label || "Toggle"}: ${this.value ? this.on : this.off}`;
+    },
+    tooltipId() {
+      return this.tooltipContent ? `toggle-tooltip-${this._uid}` : undefined;
     }
   },
+  methods: {
+    handleKeydown(event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        this.emitInput(!this.value);
+      }
+    }
+  }
 };
 </script>
 
 <template>
   <button
     v-bind="$attrs"
+    role="switch"
+    :aria-checked="value.toString()"
+    :aria-label="ariaLabel"
+    :aria-describedby="tooltipId"
     @click="emitInput(!value)"
+    @keydown="handleKeydown"
   >
     {{ displayText }}
     <div
       v-if="tooltipClass"
+      :id="tooltipId"
       :class="tooltipClass"
+      role="tooltip"
     >
       {{ tooltipContent }}
     </div>

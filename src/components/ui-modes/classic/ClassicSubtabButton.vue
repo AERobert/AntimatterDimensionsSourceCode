@@ -51,12 +51,21 @@ export default {
   <button
     v-if="isAvailable"
     :class="classObject"
+    role="tab"
+    :aria-selected="isCurrentSubtab"
+    :aria-label="`${tabName} subtab${hasNotification ? ', has notification' : ''}`"
+    :tabindex="isCurrentSubtab ? 0 : -1"
     @click="subtab.show(true)"
+    @keydown.left="$emit('navigate', -1)"
+    @keydown.right="$emit('navigate', 1)"
+    @keydown.home="$emit('navigate', 'first')"
+    @keydown.end="$emit('navigate', 'last')"
   >
     {{ tabName }}
     <div
       v-if="hasNotification"
       class="fas fa-circle-exclamation l-notification-icon"
+      aria-hidden="true"
     />
   </button>
 </template>

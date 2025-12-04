@@ -13,14 +13,17 @@ export default {
 </script>
 
 <template>
-  <div>
+  <nav
+    role="tablist"
+    aria-label="Main navigation tabs"
+  >
     <ClassicTabButton
       v-for="(tab, i) in tabs"
       :key="i"
       :tab-position="i"
       :tab="tab"
     />
-  </div>
+  </nav>
 </template>
 
 <style scoped>

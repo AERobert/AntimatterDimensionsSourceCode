@@ -154,31 +154,46 @@ export default {
       :amount-text="amountText"
       :rate="rateOfChange"
     />
-    <div class="l-dim-row-multi-button-container">
+    <div
+      class="l-dim-row-multi-button-container"
+      role="group"
+      :aria-label="`${name} purchase buttons`"
+    >
       <PrimaryButton
         v-if="!isContinuumActive"
         :enabled="isAffordable && !isCapped && isUnlocked"
         :class="buySingleClass"
+        :aria-label="`Buy one ${name}. ${singleText}. ${boughtTooltip}`"
         @click="buySingle"
       >
         <div :class="tutorialClass()">
           {{ singleText }}
         </div>
-        <div class="c-dim-purchase-count-tooltip">
+        <div
+          class="c-dim-purchase-count-tooltip"
+          role="tooltip"
+          aria-hidden="true"
+        >
           {{ boughtTooltip }}
         </div>
         <div
           v-if="hasTutorial"
           class="fas fa-circle-exclamation l-notification-icon"
+          aria-hidden="true"
         />
       </PrimaryButton>
       <PrimaryButton
         :enabled="(isAffordableUntil10 || isContinuumActive) && !isCapped && isUnlocked"
         :class="buyTenClass"
+        :aria-label="`Buy ten ${name}. ${until10Text}. ${boughtTooltip}`"
         @click="buyUntil10"
       >
         {{ until10Text }}
-        <div class="c-dim-purchase-count-tooltip">
+        <div
+          class="c-dim-purchase-count-tooltip"
+          role="tooltip"
+          aria-hidden="true"
+        >
           {{ boughtTooltip }}
         </div>
       </PrimaryButton>

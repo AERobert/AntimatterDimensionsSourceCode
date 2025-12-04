@@ -488,6 +488,22 @@ export default {
     },
     showBorders() {
       return player.options.glyphBorders;
+    },
+    glyphAriaLabel() {
+      const type = this.glyph.type || "unknown";
+      const level = this.displayLevel || this.glyph.level || 0;
+      const effectCount = this.glyphEffects?.length || 0;
+      let label = `${type} glyph, level ${level}`;
+      if (effectCount > 0) {
+        label += `, ${effectCount} effect${effectCount > 1 ? "s" : ""}`;
+      }
+      if (this.isNew) {
+        label += ", new";
+      }
+      if (this.isUnequipped) {
+        label += ", recently unequipped";
+      }
+      return label;
     }
   },
   watch: {
@@ -744,12 +760,23 @@ export default {
     :style="outerStyle"
     :class="['l-glyph-component', {'c-glyph-component--dragging': isDragging}]"
     :draggable="draggable"
+    role="button"
+    :tabindex="hasTooltip ? 0 : -1"
+    :aria-label="glyphAriaLabel"
+    :aria-describedby="isCurrentTooltip ? `glyph-tooltip-${componentID}` : undefined"
+    @keydown.enter.exact="$emit('clicked', glyph.id)"
+    @keydown.space.exact.prevent="$emit('clicked', glyph.id)"
+    @keydown.shift.enter.exact="$emit('shiftClicked', glyph.id)"
+    @keydown.shift.space.exact.prevent="$emit('shiftClicked', glyph.id)"
+    @focus="hasTooltip && showTooltip()"
+    @blur="hasTooltip && hideTooltip()"
     v-on="draggable ? { dragstart: dragStart, dragend: dragEnd, drag: drag } : {}"
   >
     <div
       ref="glyph"
       :style="innerStyle"
       :class="['l-glyph-component', 'c-glyph-component']"
+      aria-hidden="true"
     >
       {{ symbol }}
       <template v-if="$viewModel.shiftDown || showGlyphEffectDots">
@@ -760,12 +787,16 @@ export default {
         />
       </template>
     </div>
-    <div :style="glyphBorderStyle()" />
+    <div
+      :style="glyphBorderStyle()"
+      aria-hidden="true"
+    />
     <GlyphTooltip
       v-if="hasTooltip && tooltipLoaded"
       v-show="isCurrentTooltip"
-      ref="tooltip"
       v-bind="glyph"
+      :id="`glyph-tooltip-${componentID}`"
+      ref="tooltip"
       :class="tooltipDirectionClass"
       :style="zIndexStyle"
       :sacrifice-reward="sacrificeReward"
@@ -777,26 +808,31 @@ export default {
       :display-level="displayLevel"
       :component="componentID"
       :change-watcher="logTotalSacrifice"
+      role="tooltip"
     />
     <div
       v-if="isNew"
       class="l-corner-icon l-new-glyph"
+      aria-hidden="true"
     >
       New!
     </div>
     <div
       v-else-if="isUnequipped"
       class="l-corner-icon l-unequipped-glyph fas fa-arrow-up-from-bracket"
+      aria-hidden="true"
     />
     <div
       v-if="displayedInfo"
       class="l-glyph-info"
+      aria-hidden="true"
     >
       {{ displayedInfo }}
     </div>
     <div
       ref="over"
       :style="overStyle"
+      aria-hidden="true"
       v-on="mouseEventHandlers"
       @click.shift.exact="$emit('shiftClicked', glyph.id)"
       @click.ctrl.shift.exact="$emit('ctrlShiftClicked', glyph.id)"

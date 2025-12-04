@@ -5,6 +5,11 @@ export default {
   name: "ModalCloseButton",
   components: {
     PrimaryButton
+  },
+  methods: {
+    handleClick() {
+      this.emitClick();
+    }
   }
 };
 </script>
@@ -12,8 +17,9 @@ export default {
 <template>
   <PrimaryButton
     class="o-primary-btn--modal-close c-modal__close-btn"
-    @click="emitClick"
+    aria-label="Close modal"
+    @click="handleClick"
   >
-    &times;
+    <span aria-hidden="true">&times;</span>
   </PrimaryButton>
 </template>

@@ -10,6 +10,17 @@ export default {
   computed: {
     iconClass() {
       return `fas fa-${this.type}`;
+    },
+    ariaLabel() {
+      return this.type === "plus" ? "Increase value" : "Decrease value";
+    }
+  },
+  methods: {
+    handleKeydown(event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        this.$emit("click");
+      }
     }
   }
 };
@@ -19,10 +30,17 @@ export default {
   <div
     v-repeating-click="{ delay: 500 }"
     class="c-ad-slider__button"
+    role="button"
+    tabindex="0"
+    :aria-label="ariaLabel"
     @firstclick="$emit('click')"
     @repeatclick="$emit('click')"
+    @keydown="handleKeydown"
   >
-    <div :class="iconClass" />
+    <div
+      :class="iconClass"
+      aria-hidden="true"
+    />
   </div>
 </template>
 

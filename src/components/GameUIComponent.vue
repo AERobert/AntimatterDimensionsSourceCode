@@ -52,16 +52,24 @@ export default {
     id="ui-container"
     :class="containerClass"
     class="ui-wrapper"
+    role="application"
+    aria-label="Antimatter Dimensions"
   >
     <div
       id="ui"
       class="c-game-ui"
     >
       <component :is="uiLayout">
-        <component
-          :is="page"
-          class="c-game-tab"
-        />
+        <main
+          id="main-content"
+          role="main"
+          aria-label="Game content"
+        >
+          <component
+            :is="page"
+            class="c-game-tab"
+          />
+        </main>
       </component>
       <S12DesktopIcons v-if="isThemeS12" />
       <link
@@ -72,7 +80,10 @@ export default {
       >
     </div>
     <GameUiComponentFixed v-if="!isThemeS12" />
-    <BackgroundAnimations v-if="!isThemeS12" />
+    <BackgroundAnimations
+      v-if="!isThemeS12"
+      aria-hidden="true"
+    />
     <S12UiFixed v-if="isThemeS12" />
   </div>
 </template>

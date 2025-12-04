@@ -61,14 +61,24 @@ export default {
       <NewsTicker
         v-if="news"
         class="l-old-ui__news-bar"
+        role="marquee"
+        aria-label="Game news ticker"
       />
-      <GameHeader class="l-old-ui__header" />
-      <ClassicTabBar />
-      <component
-        :is="tab.config.before"
-        v-if="tab.config.before"
-      />
-      <ClassicSubtabBar />
+      <header role="banner">
+        <GameHeader class="l-old-ui__header" />
+      </header>
+      <nav
+        id="main-navigation"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <ClassicTabBar />
+        <component
+          :is="tab.config.before"
+          v-if="tab.config.before"
+        />
+        <ClassicSubtabBar />
+      </nav>
       <div class="l-old-ui__page">
         <slot />
       </div>
